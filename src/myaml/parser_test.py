@@ -1,46 +1,86 @@
 import unittest
 
-import pytest
+from parameterized import parameterized
 
-from .parser import Parser
-from .exceptions import ParsingException
-
-
-class ParserTestCase(unittest.TestCase):
-
-    def setUp(self):
-        self.parser = Parser()
+from .parser import Node
+from .parser import NodeTypes
 
 
-class TestGetIndentLevel(ParserTestCase):
-
-    def test_get_indent_level_works_when_space_is_multiple_of_indent(self):
-        indent_level = self.parser._get_indent_level(line='  b')
-        expected_indent_level = 1
-        self.assertEqual(indent_level, expected_indent_level)
-
-    def test_get_indent_level_raises_exception_when_space_not_multiple_of_indent(self):
-        with pytest.raises(ParsingException):
-            self.parser._get_indent_level(line=' blah')
+class NodeTestCase(unittest.TestCase):
+    pass
 
 
-class TestGetKey(ParserTestCase):
+class TestFromString(NodeTestCase):
 
-    def test_get_key_works_if_line_matches_the_expected_pattern_and_no_space_at_the_end(self):
-        key = self.parser._get_key(line='key:')
-        expectedKey = 'key'
-        self.assertEqual(key, expectedKey)
+    def test_scalar(self):
+        pass
 
-    def test_get_key_works_if_line_matches_the_expected_pattern_and_one_space_at_the_end(self):
-        key = self.parser._get_key(line='key: ')
-        expectedKey = 'key'
-        self.assertEqual(key, expectedKey)
+    def test_sequence(self):
 
-    def test_get_key_works_if_line_matches_the_expected_pattern_and_multiple_spaces_at_the_end(self):
-        key = self.parser._get_key(line='key:       ')
-        expectedKey = 'key'
-        self.assertEqual(key, expectedKey)
+        pass
 
-    def test_get_key_raises_exception_if_lines_doesnt_match_expected_pattern(self):
-        with pytest.raises(ParsingException):
-            self.parser._get_key(line='key')
+    def test_mapping(self):
+        pass
+
+    @parameterized.expand([
+        ('''''', {})
+    ])
+    def test_complex_mapping(self, string, expected):
+        self.assertEqual(Node.from_string(string=string), Node(nodeType=NodeTypes.MAPPING, value=string))
+
+
+class TestToNativeObject(NodeTestCase):
+    pass
+
+
+class TestgetNodeType(NodeTestCase):
+
+    @parameterized.expand([
+        ('''this is a value''', NodeTypes.SCALAR),
+        ('''key: ''', NodeTypes.MAPPING),
+        ('''key:''', NodeTypes.MAPPING),
+        ('''    key: ''', NodeTypes.MAPPING),
+        ('''key: value''', NodeTypes.MAPPING),
+        ('''key:
+    key2: value''', NodeTypes.MAPPING),
+        ('''- value
+- value2
+- value4''', NodeTypes.SEQUENCE),
+        ('''- value
+- key: value2
+- value4''', NodeTypes.SEQUENCE),
+    ])
+    def test__get_node_type(self, string, expected):
+        self.assertEqual(Node._get_node_type(string=string), expected)
+
+
+class TestGetKey(NodeTestCase):
+    @parameterized.expand([
+        ('''key: value''', 'key'),
+        ('''key:
+    key2: value''', 'key'),
+        ('''key:
+''', 'key')
+    ])
+    def test_get_key(self, string, expected):
+        self.assertEqual(Node.from_string(string=string).get_key(), expected)
+
+
+class TestGetValue(NodeTestCase):
+    @parameterized.expand([
+        ('''key: value''', 'value'),
+        ('''key:
+    key2: value''', 'key2: value'),
+        ('''key:
+''', {})
+    ])
+    def test_get_value(self, string, expected):
+        self.assertEqual(Node.from_string(string=string).get_key(), expected)
+
+
+class TestgetKeyValueStrings(NodeTestCase):
+    pass
+
+
+class TestgetElementStrings(NodeTestCase):
+    pass
