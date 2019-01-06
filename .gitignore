@@ -2,3 +2,4 @@
 .pytest*
 .venv
 *.pyc
+.coverage
