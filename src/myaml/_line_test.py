@@ -9,7 +9,7 @@ class LineTestCase(unittest.TestCase):
     pass
 
 
-class TestgetLines(LineTestCase):
+class TestGetLines(LineTestCase):
 
     def testget_lines(self):
         string = '''
@@ -18,7 +18,6 @@ key:
     key: value
 key: value'''
         expectedLines = [
-            Line(indent=0, string=''),
             Line(indent=0, string='key:'),
             Line(indent=1, string='key: value'),
             Line(indent=1, string='key: value'),
@@ -31,14 +30,12 @@ class TestgetStringFromLines(LineTestCase):
 
     def test_get_string_from_lines(self):
         lines = [
-            Line(indent=0, string=''),
             Line(indent=0, string='key:'),
             Line(indent=1, string='key: value'),
             Line(indent=1, string='key: value'),
             Line(indent=0, string='key: value'),
         ]
-        expectedString = '''
-key:
+        expectedString = '''key:
     key: value
     key: value
 key: value'''
