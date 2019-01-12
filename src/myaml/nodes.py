@@ -9,7 +9,13 @@ from ._utils import get_element_strings
 from ._utils import get_key_value_strings
 
 
-# All the nodes are here because they are tightly coupled - by the parse method - I will figure out how to move them out later
+# All the nodes are here because they are tightly coupled
+# - the parse method uses the Node registry to know about the 3 classes.
+# Right now, the NodeRegistry is a singleton - it can't be instantiated
+# I could make this work by moving it to its own class. then importing in each file that defines a node
+# then register the node - will need to make sure the files with the nodes get imported so that the registration happens
+# I will figure out how to move them out later
+# Another thing, maybe use less regex going forward?? good idea?
 
 
 @dataclass(unsafe_hash=True)
@@ -24,7 +30,7 @@ class ScalarNode(Node):
         return cls(value=string)
 
     def to_object(self) -> str:
-        return self.value  # later this will be used to convert to primitive types
+        return self.value  # later this will be used to convert to primitive types - if this matches a pattern
 
 
 @dataclass
@@ -69,7 +75,7 @@ class MappingNode(Node):
         if match:
             value = match.group(1)
             return from_string_to_node(string=value)
-        return None
+        return ScalarNode(value='')
 
 
 @dataclass
@@ -101,6 +107,9 @@ class NodeRegistry:
 
     _items = []
 
+    def __init__(self):
+        raise NotImplementedError
+
     @classmethod
     def register(cls, nodeCls: 'Node'):
         cls._items.append(nodeCls)
@@ -110,6 +119,7 @@ class NodeRegistry:
         return NodeRegistry._items
 
 
+# The order matters here in case
 NodeRegistry.register(nodeCls=MappingNode)
 NodeRegistry.register(nodeCls=SequenceNode)
 NodeRegistry.register(nodeCls=ScalarNode)
