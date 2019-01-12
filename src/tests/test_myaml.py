@@ -12,6 +12,8 @@ class TestParse(unittest.TestCase):
         ('''key:
     blah: value''', {'key': {'blah': 'value'}}
         ),
+        ('''-   -   blah''', [['        blah']]
+        ),
         ('''
 key:
 key2:
