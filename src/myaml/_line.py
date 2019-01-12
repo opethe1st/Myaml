@@ -1,7 +1,9 @@
-from dataclasses import dataclass
 import re
 
-NUM_SPACES_IN_INDENT = 4
+from dataclasses import dataclass
+
+
+NUM_SPACES_IN_INDENT = 4  # TODO(ope): need to figure out how to make this dynamic
 
 
 @dataclass
@@ -10,7 +12,7 @@ class Line:
     indent: int
 
     @classmethod
-    def _get_lines(cls, string):
+    def get_lines(cls, string):
         lines = []
         lineStrings = string.split("\n")
         for lineString in lineStrings:

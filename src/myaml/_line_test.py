@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from .line import Line
+from ._line import Line
 
 
 class LineTestCase(unittest.TestCase):
@@ -11,7 +11,7 @@ class LineTestCase(unittest.TestCase):
 
 class TestgetLines(LineTestCase):
 
-    def test_get_lines(self):
+    def testget_lines(self):
         string = '''
 key:
     key: value
@@ -24,7 +24,7 @@ key: value'''
             Line(indent=1, string='key: value'),
             Line(indent=0, string='key: value'),
         ]
-        self.assertEqual(Line._get_lines(string=string), expectedLines)
+        self.assertEqual(Line.get_lines(string=string), expectedLines)
 
 
 class TestgetStringFromLines(LineTestCase):
