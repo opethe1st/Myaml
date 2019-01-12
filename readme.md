@@ -1,5 +1,5 @@
 # myaml - Minimal YAML
-myaml stands for minimal yaml. It is a subset of Yaml and supports only the basic features. Wrote this so I flex my specification implementation muscles.
+myaml stands for minimal yaml. It is a subset of Yaml and supports only the basic features. I wrote this to flex my specification implementation muscles.
 
 
 ### How to use this library
@@ -11,15 +11,15 @@ pip install myaml
 ```python
 import myaml
 
-with open('blah.oyml') as file:
+with open('blah_m.yml') as file:
     d = myaml.parse(file.read())
 
 ```
 
 ### How to write the myaml
 Myaml support three types.
-Mappings, Sequence and Scalars.
-Mappings are written as key values. Here are some examples
+Mappings, Sequences and Scalars.
+Mappings are written as key values and they can be nested. Here are some examples
 ```yaml
 key: value
 ```
@@ -35,6 +35,14 @@ key:
     - value
     - valu3
 ```
+or
+```yaml
+key:
+    key: value
+key2:
+    - value
+key3: value
+```
 
 Sequences corresponds to arrays. Here are some examples
 ```yaml
@@ -49,7 +57,7 @@ or
 -   value
 ```
 
-Right now, it only support strings as scalars. This will change in the future
+Right now, it only support strings as scalars. This could change in the future
 ```yaml
 string value
 ```
