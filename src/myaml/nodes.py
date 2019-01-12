@@ -38,7 +38,6 @@ class MappingNode(Node):
     def from_string(cls, string: str) -> 'MappingNode':
         elementsMap = {}
         for elementString in cls._get_element_strings(string=string):
-            print('elementString', elementString, string)
             keyNode = cls._get_key_node(string=elementString)
             valueNode = cls._get_value_node(string=elementString)
             elementsMap[keyNode] = valueNode
