@@ -16,7 +16,8 @@ class Line:
         lines = []
         lineStrings = string.split("\n")
         for lineString in lineStrings:
-            lines.append(cls.from_string(string=lineString))
+            if re.match(string=lineString, pattern=r'\s*\S.*'):
+                lines.append(cls.from_string(string=lineString))
         return lines
 
     @classmethod

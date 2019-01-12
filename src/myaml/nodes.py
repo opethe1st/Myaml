@@ -38,6 +38,7 @@ class MappingNode(Node):
     def from_string(cls, string: str) -> 'MappingNode':
         elementsMap = {}
         for elementString in cls._get_element_strings(string=string):
+            print('elementString', elementString, string)
             keyNode = cls._get_key_node(string=elementString)
             valueNode = cls._get_value_node(string=elementString)
             elementsMap[keyNode] = valueNode
@@ -55,11 +56,21 @@ class MappingNode(Node):
 
     @staticmethod
     def _get_key_node(string: str) -> 'ScalarNode':
-        return ScalarNode(value='key')
+        match = re.match(string=string, pattern=r'^\s*(\S(?<!-).*?):\s*')
+        key = match.group(1)
+        return ScalarNode(value=key)
 
     @staticmethod
     def _get_value_node(string: str) -> 'Node':
-        return ScalarNode(value='value')
+        match = re.match(string=string, pattern=r'^\s*\S(?<!-).*?: (\S.*)$', flags=re.MULTILINE)
+        if match:
+            value = match.group(1)
+            return ScalarNode(value=value)
+        match = re.match(string=string, pattern=r'^\s*\S(?<!-).*?:.*?\n(.*)$', flags=re.DOTALL)
+        if match:
+            value = match.group(1)
+            return from_string_to_node(string=value)
+        return None
 
 
 @dataclass
@@ -73,7 +84,7 @@ class SequenceNode(Node):
     def from_string(cls, string: str) -> 'SequenceNode':
         elements = []
         for elementString in cls._get_element_string(string=string):
-            elements.append(parse(string=elementString))
+            elements.append(from_string_to_node(string=elementString))
         return cls(elements=elements)
 
     def to_object(self) -> list:
@@ -105,7 +116,7 @@ NodeRegistry.register(nodeCls=SequenceNode)
 NodeRegistry.register(nodeCls=ScalarNode)
 
 
-def parse(string):
+def from_string_to_node(string):
     for nodeCls in NodeRegistry.get_node_classes():
         if nodeCls.match(string=string):
             return nodeCls.from_string(string=string)

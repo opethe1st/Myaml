@@ -14,7 +14,7 @@ class TestFromString(MappingNodeTestCase):
         string = 'key1: value'
         expectedNode = MappingNode(
             elementsMap={
-                ScalarNode(value='key'): ScalarNode(value='value')
+                ScalarNode(value='key1'): ScalarNode(value='value')
             }
         )
         self.assertEqual(
