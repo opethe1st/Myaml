@@ -70,17 +70,24 @@ class TestToString(MappingNodeTestCase):
                 ScalarNode(value='key1'): ScalarNode(value='value'),
                 ScalarNode(value='key'): MappingNode(
                     elementsMap={
-                        ScalarNode(value='key'): ScalarNode(value='value')
+                        ScalarNode(value='key1'): ScalarNode(value='value'),
+                        ScalarNode(value='key'): MappingNode(
+                            elementsMap={
+                                ScalarNode(value='key'): ScalarNode(value='value')
+                            }
+                        )
                     }
                 )
             }
         )
         expectedString = '''key1: value
 key:
-    key: value
+    key1: value
+    key:
+        key: value
+
 
 '''
-        print(node.to_string())
         self.assertEqual(
             node.to_string(),
             expectedString
