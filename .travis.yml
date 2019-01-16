@@ -1,10 +1,16 @@
 language: python
-python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
+cache: pip
+python: 3.6
+env: TOXENV=py
+
+matrix:
+  include:
+    - python: 3.6
+    - python: 3.7
+      dist: xenial
+
 install:
-  - pip install -r src/requirements.txt
+  - pip install tox-travis
 
 script:
-  - pytest
+  - tox
