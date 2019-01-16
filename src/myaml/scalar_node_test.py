@@ -28,3 +28,26 @@ class TestToObject(ScalarNodeTestCase):
             node.to_object(),
             expectedObject
         )
+
+
+class TestFromObject(ScalarNodeTestCase):
+
+    def test_from_object(self):
+        obj = 'value'
+        expectedNode = ScalarNode(value=obj)
+        self.assertEqual(
+            ScalarNode.from_object(obj=obj),
+            expectedNode
+        )
+
+
+class TestToString(ScalarNodeTestCase):
+
+    def test_to_string(self):
+        value = 'value string'
+        node = ScalarNode(value=value)
+        expectedString = value
+        self.assertEqual(
+            node.to_string(),
+            expectedString
+        )

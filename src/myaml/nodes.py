@@ -24,13 +24,21 @@ class ScalarNode(Node):
     value: str
 
     regex: typing.ClassVar = re.compile(pattern=r'.*', flags=re.DOTALL)
+    nativeType: typing.ClassVar = str
 
     @classmethod
     def from_string(cls, string: str) -> 'ScalarNode':
-        return cls(value=string)
+        return cls(value=string.strip())
 
     def to_object(self) -> str:
-        return self.value  # later this will be used to convert to primitive types - if this matches a pattern
+        return self.value.strip()  # later this will be used to convert to primitive types - if this matches a pattern
+
+    @classmethod
+    def from_object(cls, obj):
+        return cls(value=obj)
+
+    def to_string(self, indentLevel=0):
+        return f'{" "*4*indentLevel}{self.value}'
 
 
 @dataclass
@@ -38,7 +46,8 @@ class MappingNode(Node):
 
     elementsMap: typing.Dict[ScalarNode, Node]
 
-    regex = re.compile(pattern=r'(^\s*(\S(?<!-).*?):\s)|^(^\s*(\S(?<!-).*?):$)', flags=re.MULTILINE)
+    regex: typing.ClassVar = re.compile(pattern=r'(^\s*(\S(?<!-).*?):\s)|^(^\s*(\S(?<!-).*?):$)', flags=re.MULTILINE)
+    nativeType: typing.ClassVar = dict
 
     @classmethod
     def from_string(cls, string: str) -> 'MappingNode':
@@ -54,6 +63,28 @@ class MappingNode(Node):
         for keyNode, valueNode in self.elementsMap.items():
             res[keyNode.to_object()] = valueNode.to_object()
         return res
+
+    @classmethod
+    def from_object(cls, obj):
+        elementsMap = {}
+        for key, value in obj.items():
+            keyNode = from_object_to_node(obj=key)
+            valueNode = from_object_to_node(obj=value)
+            elementsMap[keyNode] = valueNode
+        return cls(elementsMap=elementsMap)
+
+    def to_string(self, indentLevel=0):
+        string = ''
+        for keyNode, valueNode in self.elementsMap.items():
+            key = keyNode.to_string(indentLevel=indentLevel)
+            if isinstance(valueNode, ScalarNode):
+                value = valueNode.to_string()
+                string += f'{key}: {value}\n'
+            else:
+                value = valueNode.to_string(indentLevel=indentLevel+1)
+                string += f'{key}:\n{value}\n'
+        return string
+
 
     @staticmethod
     def _get_element_strings(string: str) -> typing.List[str]:
@@ -84,6 +115,7 @@ class SequenceNode(Node):
     elements: typing.List[Node]
 
     regex = re.compile(pattern=r'^\s*-', flags=re.MULTILINE)
+    nativeType: typing.ClassVar = list
 
     @classmethod
     def from_string(cls, string: str) -> 'SequenceNode':
@@ -97,6 +129,21 @@ class SequenceNode(Node):
         for node in self.elements:
             res.append(node.to_object())
         return res
+
+    @classmethod
+    def from_object(cls, obj):
+        elements = []
+        for element in obj:
+            elementNode = from_object_to_node(obj=element)
+            elements.append(elementNode)
+        return cls(elements=elements)
+
+
+    def to_string(self, indentLevel=0):
+        string = ''
+        for elementNode in self.elements:
+            string = string + re.sub(string=elementNode.to_string(indentLevel=indentLevel+1), pattern=r'^(\s*)    ', repl=r'\g<1>-   ') + "\n"
+        return string
 
     @staticmethod
     def _get_element_string(string: str) -> typing.List[str]:
@@ -129,4 +176,11 @@ def from_string_to_node(string):
     for nodeCls in NodeRegistry.get_node_classes():
         if nodeCls.match(string=string):
             return nodeCls.from_string(string=string)
+    raise Exception('unknown node type')
+
+
+def from_object_to_node(obj):
+    for nodeCls in NodeRegistry.get_node_classes():
+        if nodeCls.match_object(obj=obj):
+            return nodeCls.from_object(obj=obj)
     raise Exception('unknown node type')
