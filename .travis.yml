@@ -6,7 +6,7 @@ env: TOXENV=py
 matrix:
   include:
     - env: TOXENV=test
-    - env: TOXENV=codecov
+    - env: TOXENV=coverage-report
 
 install:
   - pip install tox-travis
