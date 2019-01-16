@@ -94,7 +94,7 @@ key4: value
 ''', [
                 {'key': 'value'},
                 {'key2': {'key3': 'value'}},
-                '  value',
+                'value',
             ]
         ),
     ])
