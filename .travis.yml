@@ -1,0 +1,18 @@
+language: python
+cache: pip
+python: 3.6
+env: TOXENV=py
+
+matrix:
+  include:
+    - python: 3.6
+    - python: 3.7
+      dist: xenial
+    - env: TOXENV=runtest
+    - env: TOXENV=codecov
+
+install:
+  - pip install tox-travis
+
+script:
+  - cd src/ && tox
