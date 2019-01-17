@@ -6,7 +6,7 @@ env: TOXENV=py
 matrix:
   include:
     - env: TOXENV=test
-    - env: TOXENV=coverage-report
+    # - env: TOXENV=coverage-report
     - env: TOXENV=codecov
 
 install:
