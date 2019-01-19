@@ -23,10 +23,9 @@ Will make it easy to convert from json to yaml and yaml to json, from json to st
 Nice Nice! And adding new types is just as easy.
 
 Got it working. Yay! What next?
-* Implement the reverse  - a dump function - done, but it needs refinement!
 * Need to write a draft of a blogpost detailing what I have done here and why I took certain decisions
 * Implement scalars to integers and other primitive types
 * support quoted strings
+* support flow types
 * add more complex tests to make sure everything is working
 * better error reporting
-* support flow types
