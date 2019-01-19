@@ -85,8 +85,6 @@ key:
     key1: value
     key:
         key: value
-
-
 '''
         self.assertEqual(
             node.to_string(),
