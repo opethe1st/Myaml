@@ -67,7 +67,6 @@ class TestToString(SequenceNodeTestCase):
         )
         expectedString = '''-   value
 -   key: value
-
 '''
         self.assertEqual(
             node.to_string(),
