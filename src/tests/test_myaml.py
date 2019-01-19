@@ -64,11 +64,9 @@ class TestDump(unittest.TestCase):
         ),
         ('''key:
     blah: value
-
 ''', {'key': {'blah': 'value'}}
         ),
         ('''-   -   blah
-
 ''', [['blah']]
         ),
         ('''key: \nkey2: \n''', {'key': '', 'key2': ''}
@@ -80,16 +78,12 @@ class TestDump(unittest.TestCase):
         ('''key: value
 key2:
     key3: value
-
 key4: value
 ''', {'key': 'value', 'key2': {'key3': 'value'}, 'key4': 'value'}
         ),
         ('''-   key: value
-
 -   key2:
         key3: value
-
-
 -   value
 ''', [
                 {'key': 'value'},

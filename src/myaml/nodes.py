@@ -82,7 +82,7 @@ class MappingNode(Node):
                 string += f'{key}: {value}\n'
             else:
                 value = valueNode.to_string(indentLevel=indentLevel+1)
-                string += f'{key}:\n{value}\n'
+                string += (f'{key}:\n{value}'.rstrip('\n')+'\n')
         return string
 
 
@@ -142,7 +142,7 @@ class SequenceNode(Node):
     def to_string(self, indentLevel=0):
         string = ''
         for elementNode in self.elements:
-            string = string + re.sub(string=elementNode.to_string(indentLevel=indentLevel+1), pattern=r'^(\s*)    ', repl=r'\g<1>-   ') + "\n"
+            string = string + (re.sub(string=elementNode.to_string(indentLevel=indentLevel+1), pattern=r'^(\s*)    ', repl=r'\g<1>-   ').strip('\n') + "\n")
         return string
 
     @staticmethod
