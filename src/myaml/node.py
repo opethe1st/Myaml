@@ -4,8 +4,15 @@ import typing
 
 class Node(abc.ABC):
 
-    regex = None
-    nativeType = None
+    @property
+    @abc.abstractproperty
+    def regex(self):
+        pass
+
+    @property
+    @abc.abstractproperty
+    def nativeType(self):
+        pass
 
     @abc.abstractclassmethod
     def from_string(cls, string: str) -> 'Node':
