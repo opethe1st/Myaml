@@ -19,7 +19,8 @@ with open('blah_m.yml') as file:
 ### How to write the myaml
 Myaml support three types.
 Mappings, Sequences and Scalars.
-Mappings are written as key values and they can be nested. Here are some examples
+Mappings are written as key values and they can be nested. Here are some examples. Please, note that right now, we only support indenting by 4 spaces. It is currently undefined
+what happens when you used spaces that are not multiplies of 4.
 ```yaml
 key: value
 ```
