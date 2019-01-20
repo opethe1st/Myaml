@@ -15,7 +15,7 @@ And the code looks better but it's not perfect but it works as far as I want it 
 
 Next step, might be implement the reverse of parse. This is a simple exercise and it took too long I think. I plan
 to improve on my implementation skills. TDD is also awesome! and I experimented with having the _test.py files side
-by side with the code and integration tests in tests/. I think that worked well.
+by side with the code and integration tests in tests/. I think that worked well - probably means I need to figure out how to exclude test files from the library package.
 
 Maybe I can extend this to support parsing json and retain the node as the central thing. Means I will remove the from_string method from the Node
 and make it a standalone - this support the open close principle because I wont need to modify the Node anymore if I need to add a new way of parsing.

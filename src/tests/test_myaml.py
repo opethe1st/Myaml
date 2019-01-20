@@ -52,7 +52,7 @@ key4: value
             ]
         ),
     ])
-    def test_simple_parsing(self, string, expected):
+    def test_parsing(self, string, expected):
         self.assertEqual(myaml.parse(string=string), expected)
 
 
@@ -92,5 +92,5 @@ key4: value
             ]
         ),
     ])
-    def test_simple_dumping(self, expected, obj):
+    def test_dumping(self, expected, obj):
         self.assertEqual(myaml.dump(obj=obj), expected)
