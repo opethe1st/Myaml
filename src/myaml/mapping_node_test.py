@@ -1,7 +1,7 @@
 import unittest
 
-from .nodes import MappingNode
-from .nodes import ScalarNode
+from .mapping_node import MappingNode
+from .scalar_node import ScalarNode
 
 
 class MappingNodeTestCase(unittest.TestCase):

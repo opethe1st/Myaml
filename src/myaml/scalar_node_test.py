@@ -1,6 +1,6 @@
 import unittest
 
-from .nodes import ScalarNode
+from .scalar_node import ScalarNode
 
 
 class ScalarNodeTestCase(unittest.TestCase):
