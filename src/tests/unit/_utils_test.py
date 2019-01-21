@@ -2,8 +2,8 @@ import unittest
 
 from parameterized import parameterized
 
-from ._utils import get_key_value_strings
-from ._utils import get_element_strings
+from myaml._utils import get_key_value_strings
+from myaml._utils import get_element_strings
 
 
 class TestGetKeyValueStrings(unittest.TestCase):

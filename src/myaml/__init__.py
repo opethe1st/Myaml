@@ -1,8 +1,15 @@
-# this is imported because of its sideeffect of registering node subclasses in a particular order
-import myaml.register
-
 from .exceptions import ParsingException
 from .node import Node
+
+from .mapping_node import MappingNode
+from .node_registry import nodeRegistry
+from .scalar_node import ScalarNode
+from .sequence_node import SequenceNode
+
+
+nodeRegistry.register(MappingNode)
+nodeRegistry.register(SequenceNode)
+nodeRegistry.register(ScalarNode)
 
 
 def parse(string):

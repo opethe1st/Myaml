@@ -1,5 +1,7 @@
-from setuptools import setup
-
+from setuptools import (
+    setup,
+    find_packages,
+)
 
 setup(
     name='myaml',
@@ -9,6 +11,6 @@ setup(
     author='Opemipo Ogunkola (Ope)',
     author_email='ogunks900@gmail.com',
     license='MIT',
-    packages=['myaml'],
+    packages=find_packages(where=".", exclude=["tests"]),
     zip_safe=False
 )
