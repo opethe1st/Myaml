@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from ._line import Line
+from myaml._line import Line
 
 
 class LineTestCase(unittest.TestCase):

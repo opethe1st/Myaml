@@ -1,8 +1,8 @@
 import unittest
 
-from .mapping_node import MappingNode
-from .scalar_node import ScalarNode
-from .sequence_node import SequenceNode
+from myaml.mapping_node import MappingNode
+from myaml.scalar_node import ScalarNode
+from myaml.sequence_node import SequenceNode
 
 
 class SequenceNodeTestCase(unittest.TestCase):

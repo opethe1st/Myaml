@@ -1,6 +1,6 @@
 import unittest
 
-from .scalar_node import ScalarNode
+from myaml.scalar_node import ScalarNode
 
 
 class ScalarNodeTestCase(unittest.TestCase):
