@@ -29,3 +29,7 @@ Got it working. Yay! What next?
 * support flow types
 * add more complex tests to make sure everything is working
 * better error reporting
+
+
+tried to keep my tests side by side with the code, but realized I couldnt come up with a way to exclude them from my packages - that's what happens when you go
+against conventions
