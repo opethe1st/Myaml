@@ -6,10 +6,6 @@ from .node_registry import nodeRegistry
 
 class Node(abc.ABC):
 
-    @classmethod
-    def __init_subclass__(cls):
-        nodeRegistry.register(cls)
-
     @property
     @abc.abstractproperty
     def regex(self):

@@ -1,5 +1,7 @@
-from .exceptions import ParsingException
+# this is imported because of its sideeffect of registering node subclasses in a particular order
+import myaml.register
 
+from .exceptions import ParsingException
 from .node import Node
 
 

@@ -1,5 +1,7 @@
+import typing
 
-class NodeRegistry:
+
+class nodeRegistry:
 
     _items = []
 
@@ -11,8 +13,5 @@ class NodeRegistry:
         cls._items.append(nodeCls)
 
     @staticmethod
-    def get_node_classes() -> list:
-        return NodeRegistry._items
-
-
-nodeRegistry = NodeRegistry
+    def get_node_classes() -> typing.List['Node']:
+        return nodeRegistry._items

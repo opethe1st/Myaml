@@ -64,8 +64,8 @@ class MappingNode(Node):
         key = match.group(1)
         return ScalarNode(value=key)
 
-    @staticmethod
-    def _get_value_node(string: str) -> 'Node':
+    @classmethod
+    def _get_value_node(cls, string: str) -> 'Node':
         match = re.match(string=string, pattern=r'^\s*\S(?<!-).*?: (\S.*)$', flags=re.MULTILINE)
         if match:
             value = match.group(1)
