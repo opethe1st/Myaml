@@ -46,10 +46,10 @@ key4: value
     key3: value
 - value
     ''', [
-                {'key': 'value'},
-                {'key2': {'key3': 'value'}},
-                'value',
-            ]
+            {'key': 'value'},
+            {'key2': {'key3': 'value'}},
+            'value',
+        ]
         ),
     ])
     def test_parsing(self, string, expected):

@@ -1,8 +1,8 @@
 import unittest
 
-from .nodes import SequenceNode
-from .nodes import ScalarNode
-from .nodes import MappingNode
+from .mapping_node import MappingNode
+from .scalar_node import ScalarNode
+from .sequence_node import SequenceNode
 
 
 class SequenceNodeTestCase(unittest.TestCase):
