@@ -33,3 +33,10 @@ Got it working. Yay! What next?
 
 tried to keep my tests side by side with the code, but realized I couldnt come up with a way to exclude them from my packages - that's what happens when you go
 against conventions
+
+So I want to add support for arbitary indentation - initially I was going to do this by adding the indentSize as a parameter to the from_string methods
+but I soon realized that I would be passing this variable everywhere - tramp data. I hit upon another approach, convert what I have to string with arbitary indentSize
+into the currently supported indentSize. Viola! this meant I just need to replace the detected indent with the desired one.
+Works right? Almost! So there is this condition - what happens when the line starts with `- `(a dash and three spaces?) this needs to become `-   `. Tricky.
+My find replace no longer works. So what can I do? new idea - first replace - `- ` with `#`(or some other special character) (this requires I am ignoring the comments, I am not currently doing this)
+and then replace the spaces at the begin of lines with `!`. and replace in order first. then replace `#` with the desired indent and `!` with `-` + ' '*desired indentSize

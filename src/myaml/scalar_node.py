@@ -4,6 +4,7 @@ import typing
 from dataclasses import dataclass
 
 from .node import Node
+from .constants import NUM_SPACES_IN_INDENT
 
 
 @dataclass(unsafe_hash=True)
@@ -26,4 +27,4 @@ class ScalarNode(Node):
         return cls(value=obj)
 
     def to_string(self, indentLevel=0):
-        return f'{" "*4*indentLevel}{self.value}'
+        return f'{" "*NUM_SPACES_IN_INDENT*indentLevel}{self.value}'

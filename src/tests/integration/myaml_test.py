@@ -51,6 +51,10 @@ key4: value
             'value',
         ]
         ),
+        ('''
+key:
+  key: value''', {'key': {'key': 'value'}}
+        )
     ])
     def test_parsing(self, string, expected):
         self.assertEqual(myaml.parse(string=string), expected)
