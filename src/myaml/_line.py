@@ -2,8 +2,7 @@ import re
 
 from dataclasses import dataclass
 
-
-NUM_SPACES_IN_INDENT = 4  # TODO(ope): need to figure out how to make this dynamic
+from .constants import NUM_SPACES_IN_INDENT
 
 
 @dataclass

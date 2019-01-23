@@ -42,10 +42,10 @@ class SequenceNode(Node):
     def to_string(self, indentLevel=0):
         string = ''
         for elementNode in self.elements:
+            # I should make the indent here configurable
             string = string + (re.sub(string=elementNode.to_string(indentLevel=indentLevel+1), pattern=r'^(\s*)    ', repl=r'\g<1>-   ').strip('\n') + "\n")
         return string
 
     @staticmethod
     def _get_element_string(string: str) -> typing.List[str]:
         return get_element_strings(string=string)
-
