@@ -69,6 +69,16 @@ key:
 key:
   - key: value''', {'key': [{'key': 'value'}]}
         ),
+        ('''
+key:
+  - key: value#1232''', {'key': [{'key': 'value#1232'}]}
+        ),
+        ('''
+value-1232''', 'value-1232'
+        ),
+        ('''
+value:1232''', 'value:1232'
+        ),
     ])
     def test_parsing(self, string, expected):
         self.assertEqual(myaml.load(string=string), expected)

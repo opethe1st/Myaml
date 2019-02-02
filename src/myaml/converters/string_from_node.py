@@ -37,8 +37,10 @@ def _(node, indentLevel=0):
     string = ''
     for elementNode in node.items:
         elementString = string_from_node(elementNode,indentLevel=indentLevel+1)
-        string += (
-            re.sub(
-                string=elementString,
-                pattern=r'^(\s*)    ', repl=r'\g<1>-   ').strip('\n') + "\n")
+        elementString = re.sub(
+            string=elementString,
+            pattern=r'^(\s*)    ',
+            repl=r'\g<1>-   '
+        )
+        string += (elementString.strip('\n') + "\n")
     return string

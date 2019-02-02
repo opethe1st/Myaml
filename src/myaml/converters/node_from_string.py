@@ -69,7 +69,16 @@ def is_scalar_string(string: str) -> bool:
 
 
 def is_mapping_string(string: str) -> bool:
-    return bool(re.match(pattern=r'(^\s*(\S(?<!-).*?):\s)|^(^\s*(\S(?<!-).*?):$)', string=string))
+    return bool(
+        re.match(
+            pattern=r'''
+                (^\s*\S(?<!-).*?:\s+)  # if the string looks like 'key: '
+                |   (^\s*\S(?<!-).*?:$) # if the string looks like '  key:' but not '- key: '
+            ''',
+            string=string,
+            flags=re.VERBOSE,
+        )
+    )
 
 
 def is_sequence_string(string):
