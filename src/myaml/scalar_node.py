@@ -3,8 +3,8 @@ import typing
 
 from dataclasses import dataclass
 
-from .node import Node
 from .constants import NUM_SPACES_IN_INDENT
+from .node import Node
 
 
 @dataclass(unsafe_hash=True)

@@ -3,6 +3,7 @@ import re
 from dataclasses import dataclass
 
 from .constants import NUM_SPACES_IN_INDENT
+from .exceptions import InconsistentIndentation
 
 
 @dataclass
@@ -29,6 +30,10 @@ class Line:
     def _get_indent(string):
         match = re.match(pattern=r'(\s*?)\S', string=string)
         numOfSpaces = len(match.group(1)) if match is not None else 0
+        if numOfSpaces%NUM_SPACES_IN_INDENT:
+            raise InconsistentIndentation(
+                f'Got {numOfSpaces} spaces in the indentation, need a multiple of {NUM_SPACES_IN_INDENT}'
+            )
         return numOfSpaces//NUM_SPACES_IN_INDENT
 
     @staticmethod

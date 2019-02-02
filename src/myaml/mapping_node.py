@@ -3,8 +3,10 @@ import typing
 
 from dataclasses import dataclass
 
-from ._utils import get_element_strings
-from ._utils import get_key_value_strings
+from ._utils import (
+    get_element_strings,
+    get_key_value_strings
+)
 from .node import Node
 from .scalar_node import ScalarNode
 
@@ -20,7 +22,7 @@ class MappingNode(Node):
     @classmethod
     def from_string(cls, string: str) -> 'MappingNode':
         elementsMap = {}
-        for elementString in cls._get_element_strings(string=string):
+        for elementString in get_element_strings(string=string):
             keyNode = cls._get_key_node(string=elementString)
             valueNode = cls._get_value_node(string=elementString)
             elementsMap[keyNode] = valueNode
@@ -53,11 +55,7 @@ class MappingNode(Node):
                 string += (f'{key}:\n{value}'.rstrip('\n')+'\n')
         return string
 
-
-    @staticmethod
-    def _get_element_strings(string: str) -> typing.List[str]:
-        return get_key_value_strings(string=string)
-
+    # should move this to utils probably - the idea is to perhaps not have any regex in the Nodes - keep regex as a low-level detail.
     @staticmethod
     def _get_key_node(string: str) -> 'ScalarNode':
         match = re.match(string=string, pattern=r'^\s*(\S(?<!-).*?):\s*')

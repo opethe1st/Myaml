@@ -1,7 +1,9 @@
-from .exceptions import ParsingException
-from .node import Node
-
+from .exceptions import (
+    ParsingException,
+    InconsistentIndentation,
+)
 from .mapping_node import MappingNode
+from .node import Node
 from .node_registry import nodeRegistry
 from .scalar_node import ScalarNode
 from .sequence_node import SequenceNode

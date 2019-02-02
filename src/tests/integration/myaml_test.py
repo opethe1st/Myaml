@@ -69,6 +69,17 @@ key:
     def test_parsing(self, string, expected):
         self.assertEqual(myaml.parse(string=string), expected)
 
+    @parameterized.expand([
+        ('''
+key:
+  key: value
+   key: value''', myaml.InconsistentIndentation
+        ),
+    ])
+    def test_raise_exception(self, string, expectedException):
+        with self.assertRaises(expectedException):
+            myaml.parse(string=string)
+
 
 
 class TestDump(unittest.TestCase):

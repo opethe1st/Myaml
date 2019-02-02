@@ -40,3 +40,8 @@ into the currently supported indentSize. Viola! this meant I just need to replac
 Works right? Almost! So there is this condition - what happens when the line starts with `- `(a dash and three spaces?) this needs to become `-   `. Tricky.
 My find replace no longer works. So what can I do? new idea - first replace - `- ` with `#`(or some other special character) (this requires I am ignoring the comments, I am not currently doing this)
 and then replace the spaces at the begin of lines with `!`. and replace in order first. then replace `#` with the desired indent and `!` with `-` + ' '*desired indentSize
+
+
+commenting doesnt work
+
+key: value#valu - would be wrong

@@ -46,7 +46,10 @@ def _detect_indentation(string):
 
 
 def _get_indent_size(line):
-    match = re.match(string=line, pattern=r'(\s*)\S')
+    match = re.match(string=line, pattern=r'(^-\s+)\S')
+    if match:
+        return len(match.group(1))
+    match = re.match(string=line, pattern=r'(^\s+)\S')
     if match:
         return len(match.group(1))
     return None
@@ -61,6 +64,9 @@ def _remove_comments(string):
 
 def _replace_indent_size(string, oldIndentSize, newIndentSize):
     lines = string.split('\n')
-    lines = [re.sub(string=line, pattern=r'-'+' '*(oldIndentSize-1), repl='-'+' '*(newIndentSize-1)) for line in lines]
-    lines = [re.sub(string=line, pattern=r' '*oldIndentSize, repl=' '*newIndentSize) for line in lines]
+    # this means that if # or $ are present in my text, I am going to have problems
+    lines = [re.sub(string=line, pattern=r'^-'+' '*(oldIndentSize-1), repl='#') for line in lines]
+    lines = [re.sub(string=line, pattern=r' '*oldIndentSize, repl='$') for line in lines]
+    lines = [re.sub(string=line, pattern=r'\$', repl=' '*newIndentSize) for line in lines]
+    lines = [re.sub(string=line, pattern=r'#', repl='-'+' '*(newIndentSize-1)) for line in lines]
     return "\n".join(lines)

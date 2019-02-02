@@ -1,12 +1,13 @@
 import re
 import typing
 
-
 from dataclasses import dataclass
 
+from ._utils import (
+    get_element_strings,
+    get_key_value_strings,
+)
 from .node import Node
-from ._utils import get_element_strings
-from ._utils import get_key_value_strings
 
 
 @dataclass
@@ -20,7 +21,7 @@ class SequenceNode(Node):
     @classmethod
     def from_string(cls, string: str) -> 'SequenceNode':
         elements = []
-        for elementString in cls._get_element_string(string=string):
+        for elementString in get_element_strings(string=string):
             elements.append(super().from_string(string=elementString))
         return cls(elements=elements)
 
@@ -45,7 +46,3 @@ class SequenceNode(Node):
             # I should make the indent here configurable
             string = string + (re.sub(string=elementNode.to_string(indentLevel=indentLevel+1), pattern=r'^(\s*)    ', repl=r'\g<1>-   ').strip('\n') + "\n")
         return string
-
-    @staticmethod
-    def _get_element_string(string: str) -> typing.List[str]:
-        return get_element_strings(string=string)

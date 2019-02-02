@@ -16,6 +16,14 @@ class Node(abc.ABC):
     def nativeType(self):
         pass
 
+    @abc.abstractmethod
+    def to_object(self) -> typing.Union[str, dict, list]:
+        pass
+
+    @abc.abstractmethod
+    def to_string(self) -> str:  # this should be the same as the __repr__  or __str__?
+        pass
+
     @abc.abstractclassmethod
     def from_string(cls, string: str) -> 'Node':
         for nodeCls in nodeRegistry.get_node_classes():
@@ -23,20 +31,12 @@ class Node(abc.ABC):
                 return nodeCls.from_string(string=string)
         raise Exception('unknown node type')
 
-    @abc.abstractmethod
-    def to_object(self) -> typing.Union[str, dict, list]:
-        pass
-
     @abc.abstractclassmethod
     def from_object(cls, obj: typing.Union[str, dict, list]) -> 'Node':
         for nodeCls in nodeRegistry.get_node_classes():
             if nodeCls.match_object(obj=obj):
                 return nodeCls.from_object(obj=obj)
         raise Exception('unknown node type')
-
-    @abc.abstractmethod
-    def to_string(self) -> str:  # this should be the same as the __repr__  or __str__?
-        pass
 
     @classmethod
     def match_object(cls, obj):
