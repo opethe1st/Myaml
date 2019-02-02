@@ -65,6 +65,10 @@ key:
 key:
   key: value''', {'key': {'key': 'value'}}
         ),
+        ('''
+key:
+  - key: value''', {'key': [{'key': 'value'}]}
+        ),
     ])
     def test_parsing(self, string, expected):
         self.assertEqual(myaml.load(string=string), expected)
@@ -79,18 +83,6 @@ key:
     def test_raise_exception(self, string, expectedException):
         with self.assertRaises(expectedException):
             myaml.load(string=string)
-
-    @parameterized.expand([
-        ('''
-key:
-  key: value
-   key: value''', myaml.exceptions.InconsistentIndentation
-        ),
-    ])
-    def test_raise_exception(self, string, expectedException):
-        with self.assertRaises(expectedException):
-            myaml.load(string=string)
-
 
 
 class TestDump(unittest.TestCase):

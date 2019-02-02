@@ -3,10 +3,10 @@ from pprint import pprint
 
 
 with open('demo.yaml') as file:
-    d1 = myaml.parse(string=file.read())
+    d1 = myaml.load(string=file.read())
 
 with open('demo2.yaml') as file:
-    d2 = myaml.parse(string=file.read())
+    d2 = myaml.load(string=file.read())
 
 
 pprint(d1)

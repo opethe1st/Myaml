@@ -37,7 +37,7 @@ def _remove_comments(string):
 def _replace_indent_size(string, oldIndentSize, newIndentSize):
     lines = string.split('\n')
     # this means that if # or $ are present in my text, I am going to have problems
-    lines = [re.sub(string=line, pattern=r'^-'+' '*(oldIndentSize-1), repl='#') for line in lines]
+    lines = [re.sub(string=line, pattern=r'-'+' '*(oldIndentSize-1), repl='#') for line in lines]
     lines = [re.sub(string=line, pattern=r' '*oldIndentSize, repl='$') for line in lines]
     lines = [re.sub(string=line, pattern=r'\$', repl=' '*newIndentSize) for line in lines]
     lines = [re.sub(string=line, pattern=r'#', repl='-'+' '*(newIndentSize-1)) for line in lines]
