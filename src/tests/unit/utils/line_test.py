@@ -2,16 +2,19 @@ import unittest
 
 from parameterized import parameterized
 
-from myaml._line import Line
+from myaml.utils.line import (
+    Line,
+    get_indent,
+    get_lines,
+    get_string,
+    get_string_from_lines,
+    line_from_string,
+)
 
 
-class LineTestCase(unittest.TestCase):
-    pass
+class TestGetLines(unittest.TestCase):
 
-
-class TestGetLines(LineTestCase):
-
-    def testget_lines(self):
+    def test_get_lines(self):
         string = '''
 key:
     key: value
@@ -23,10 +26,10 @@ key: value'''
             Line(indent=1, string='key: value'),
             Line(indent=0, string='key: value'),
         ]
-        self.assertEqual(Line.get_lines(string=string), expectedLines)
+        self.assertEqual(get_lines(string=string), expectedLines)
 
 
-class TestgetStringFromLines(LineTestCase):
+class TestGetStringFromLines(unittest.TestCase):
 
     def test_get_string_from_lines(self):
         lines = [
@@ -39,10 +42,10 @@ class TestgetStringFromLines(LineTestCase):
     key: value
     key: value
 key: value'''
-        self.assertEqual(Line._get_string_from_lines(lines=lines), expectedString)
+        self.assertEqual(get_string_from_lines(lines=lines), expectedString)
 
 
-class TestFromString(LineTestCase):
+class TestFromString(unittest.TestCase):
 
     @parameterized.expand([
         ('the indent', Line(indent=0, string='the indent')),
@@ -52,10 +55,10 @@ class TestFromString(LineTestCase):
         ('        key: value  ', Line(indent=2, string='key: value  ')),
     ])
     def test_from_string(self, string, expectedLine):
-        self.assertEqual(Line.from_string(string=string), expectedLine)
+        self.assertEqual(line_from_string(string=string), expectedLine)
 
 
-class TestgetIndent(LineTestCase):
+class TestGetIndent(unittest.TestCase):
 
     @parameterized.expand([
         ('the indent', 0),
@@ -63,10 +66,10 @@ class TestgetIndent(LineTestCase):
         ('        the value', 2),
     ])
     def test_get_indent(self, string, expectedIndent):
-        self.assertEqual(first=Line._get_indent(string=string), second=expectedIndent)
+        self.assertEqual(first=get_indent(string=string), second=expectedIndent)
 
 
-class TestgetString(LineTestCase):
+class TestGetString(unittest.TestCase):
 
     @parameterized.expand([
         ('the indent', 'the indent'),
@@ -76,4 +79,4 @@ class TestgetString(LineTestCase):
         ('        key: value  ', 'key: value  '),
     ])
     def test_get_indent(self, string, expectedIndent):
-        self.assertEqual(first=Line._get_string(string=string), second=expectedIndent)
+        self.assertEqual(first=get_string(string=string), second=expectedIndent)

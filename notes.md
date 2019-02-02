@@ -45,3 +45,13 @@ and then replace the spaces at the begin of lines with `!`. and replace in order
 commenting doesnt work
 
 key: value#valu - would be wrong
+
+
+Finally have some insights, the code is going to be beautiful :D
+I should probably add linting with flake8 or pylint (how do I decide which one?)
+And also type hints with mypy - question is are they worth the hassle?
+hated the mutual recursion between the parent class and the subclasses. I think it is a bad idea that the class knows about its subclasses.
+Dependency should be one-way... but how does this apply to the observer pattern?
+
+
+Refactoring now - this is a better design, I think, so far!

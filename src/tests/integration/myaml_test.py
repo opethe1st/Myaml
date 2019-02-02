@@ -5,7 +5,7 @@ from parameterized import parameterized
 import myaml
 
 
-class TestParse(unittest.TestCase):
+class TestLoad(unittest.TestCase):
     @parameterized.expand([
         ('''blah: value''', {'blah': 'value'}
         ),
@@ -67,18 +67,29 @@ key:
         ),
     ])
     def test_parsing(self, string, expected):
-        self.assertEqual(myaml.parse(string=string), expected)
+        self.assertEqual(myaml.load(string=string), expected)
 
     @parameterized.expand([
         ('''
 key:
   key: value
-   key: value''', myaml.InconsistentIndentation
+   key: value''', myaml.exceptions.InconsistentIndentation
         ),
     ])
     def test_raise_exception(self, string, expectedException):
         with self.assertRaises(expectedException):
-            myaml.parse(string=string)
+            myaml.load(string=string)
+
+    @parameterized.expand([
+        ('''
+key:
+  key: value
+   key: value''', myaml.exceptions.InconsistentIndentation
+        ),
+    ])
+    def test_raise_exception(self, string, expectedException):
+        with self.assertRaises(expectedException):
+            myaml.load(string=string)
 
 
 
