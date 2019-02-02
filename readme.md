@@ -1,42 +1,60 @@
-# myaml - Minimal YAML
-myaml stands for minimal yaml. It is a subset of Yaml and supports only the basic features. I wrote this to flex my specification implementation muscles.
+# Myaml - Minimal YAML
+This is a code kata that implements a subset of the yaml spec.
+It is NOT intended to be used by anyone. It's just a way for me to deliberately practice my software engineering skills (design in particular)
 
 
 ### How to use this library
-To use myaml,
+-----
+To use myaml, clone this repo, then do.
 ```bash
-pip install myaml
+cd src/
+pip install .
 ```
+create a yaml file called `blah.yaml` that has some yaml in it.
+Then do this
 
 ```python
 import myaml
 
-with open('blah_m.yml') as file:
-    d = myaml.parse(file.read())
+
+with open('blah.yaml') as file:
+    blah = myaml.load(file.read())
 
 ```
 
-### How to write the myaml
+## How to write the Myaml
+----
 Myaml support three types.
-Mappings, Sequences and Scalars.
-Mappings are written as key values and they can be nested. Here are some examples. Please, note that right now, we only support indenting by 4 spaces. It is currently undefined
-what happens when you used spaces that are not multiplies of 4.
+* Mappings
+* Sequences
+* Scalars
+
+### *Scalars*
+
+Scalars represent strings (they could also represent other primitive types but only strings are supported at the moment)
+
+Mappings and Sequences are the collection types. They are recursive structures i.e they can contain other mappings and sequences.
+
+### *Mappings*
+
+Mappings correspond to dictionaries and can be nested.
+The key has to be a scalar and the value can be a scalar like in the example below
 ```yaml
 key: value
 ```
-or
+or the value can be a mapping that is indented one level more than the key
 ```yaml
 key:
     key2: value
     key3: value
 ```
-or
+or the value can be a sequence that is indented one level more than the key
 ```yaml
 key:
     - value
     - valu3
 ```
-or
+or look like this example, that has keys with values of different types
 ```yaml
 key:
     key: value
@@ -45,7 +63,11 @@ key2:
 key3: value
 ```
 
-Sequences corresponds to arrays. Here are some examples
+### *Sequences*
+
+Sequences corresponds to arrays.
+An item in a sequence is denoted by a `- ` where the length of this should be equal to the indentSize(number of spaces that make up an indent).
+Here are some examples
 ```yaml
 -   value
 -   value3
@@ -56,9 +78,4 @@ or
 -   key:
         key3: value
 -   value
-```
-
-Right now, it only support strings as scalars. This could change in the future
-```yaml
-string value
 ```
