@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from myaml.utils import (
+from myaml.converters.utils import (
     get_element_strings,
 )
 

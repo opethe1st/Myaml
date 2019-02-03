@@ -2,7 +2,7 @@ import unittest
 
 from parameterized import parameterized
 
-from myaml.utils.line import (
+from myaml.converters.utils.line import (
     Line,
     get_indent,
     get_lines,

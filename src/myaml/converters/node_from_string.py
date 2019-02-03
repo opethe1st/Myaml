@@ -6,7 +6,7 @@ from myaml.core.nodes import (
     ScalarNode,
     SequenceNode
 )
-from myaml.utils import (
+from .utils import (
     get_element_strings,
     get_key_value_strings,
 )
