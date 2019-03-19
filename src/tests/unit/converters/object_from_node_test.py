@@ -15,7 +15,7 @@ class TestObjectFromScalarNode(TestCase):
         node = ScalarNode(value=value)
         expectedObject = value
         self.assertEqual(
-            object_from_node(node),
+            object_from_node(node),  # sigh. I can't use keyword arguments with singledispatch functions
             expectedObject
         )
 

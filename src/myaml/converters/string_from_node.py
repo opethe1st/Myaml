@@ -1,11 +1,8 @@
-from functools import singledispatch
 import re
-from myaml.core.nodes import (
-    MappingNode,
-    ScalarNode,
-    SequenceNode
-)
+from functools import singledispatch
+
 from myaml.constants import NUM_SPACES_IN_INDENT
+from myaml.core.nodes import MappingNode, Node, ScalarNode, SequenceNode
 
 
 @singledispatch
@@ -14,12 +11,12 @@ def string_from_node(node: 'Node', indentLevel=0) -> str:
 
 
 @string_from_node.register(ScalarNode)
-def _(node, indentLevel=0):
+def _1(node, indentLevel=0) -> str:
     return f'{" "*NUM_SPACES_IN_INDENT*indentLevel}{node.value}'
 
 
 @string_from_node.register(MappingNode)
-def _(node, indentLevel=0):
+def _2(node, indentLevel=0) -> str:
     string = ''
     for keyNode, valueNode in node.map_.items():
         key = string_from_node(keyNode, indentLevel=indentLevel)
@@ -33,7 +30,7 @@ def _(node, indentLevel=0):
 
 
 @string_from_node.register(SequenceNode)
-def _(node, indentLevel=0):
+def _3(node, indentLevel=0) -> str:
     string = ''
     for elementNode in node.items:
         elementString = string_from_node(elementNode,indentLevel=indentLevel+1)

@@ -1,15 +1,16 @@
 import re
+from typing import Optional
 
 from myaml.constants import NUM_SPACES_IN_INDENT
 
 
-def format_to_canonical_form(string):
+def format_to_canonical_form(string: str) -> str:
     string = _remove_comments(string=string)
     currentIndentSize = _detect_indentation(string=string)
     return _replace_indent_size(string=string, oldIndentSize=currentIndentSize, newIndentSize=NUM_SPACES_IN_INDENT)
 
 
-def _detect_indentation(string):
+def _detect_indentation(string: str) -> int:
     for line in string.split('\n'):
         if line:
             indentSize = _get_indent_size(line=line)
@@ -18,7 +19,7 @@ def _detect_indentation(string):
     return NUM_SPACES_IN_INDENT
 
 
-def _get_indent_size(line):
+def _get_indent_size(line: str) -> Optional[int]:
     match = re.match(string=line, pattern=r'(^-\s+)\S')
     if match:
         return len(match.group(1))
@@ -28,7 +29,7 @@ def _get_indent_size(line):
     return None
 
 
-def _remove_comments(string):
+def _remove_comments(string: str) -> str:
     lines = string.split('\n')
     lines = [
         re.sub(
@@ -45,7 +46,7 @@ def _remove_comments(string):
     return "\n".join(lines)
 
 
-def _replace_indent_size(string, oldIndentSize, newIndentSize):
+def _replace_indent_size(string: str, oldIndentSize: int, newIndentSize: int) -> str:
     lines = string.split('\n')
     # this means that if ! or $ are present in my text, I am going to have problems
     lines = [re.sub(string=line, pattern=r'-'+' '*(oldIndentSize-1), repl='!') for line in lines]

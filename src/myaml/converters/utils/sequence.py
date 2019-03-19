@@ -1,11 +1,10 @@
 import re
+from typing import List
 
-from .mapping import (
-    get_key_value_strings,
-)
+from .mapping import get_key_value_strings
 
 
-def get_element_strings(string):
+def get_element_strings(string: str) -> List[str]:
     return [
         re.sub(
             pattern=r'(\s*?)-(.*)',

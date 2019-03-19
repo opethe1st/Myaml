@@ -1,24 +1,21 @@
 from functools import singledispatch
+from typing import Dict, List
 
-from myaml.core.nodes import (
-    MappingNode,
-    ScalarNode,
-    SequenceNode
-)
+from myaml.core.nodes import MappingNode, Node, ScalarNode, SequenceNode
 
 
 @singledispatch
-def object_from_node(node):
+def object_from_node(node: 'Node'):
     raise Exception(f'unknown node: {node}')
 
 
 @object_from_node.register(ScalarNode)
-def _(node):
+def _1(node: 'ScalarNode') -> str:
     return node.value
 
 
 @object_from_node.register(MappingNode)
-def _(node):
+def _2(node: 'MappingNode') -> Dict:
     res = {}
     for keyNode, valueNode in node.map_.items():
         key = object_from_node(keyNode)
@@ -28,8 +25,8 @@ def _(node):
 
 
 @object_from_node.register(SequenceNode)
-def _(node):
+def _3(node: 'SequenceNode') -> List:
     res = []
-    for node in node.items:
-        res.append(object_from_node(node))
+    for itemNode in node.items:
+        res.append(object_from_node(itemNode))
     return res

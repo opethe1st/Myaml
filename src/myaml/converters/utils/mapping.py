@@ -1,10 +1,9 @@
-from .line import (
-    get_lines,
-    get_string_from_lines,
-)
+from typing import List
+
+from .line import get_lines, get_string_from_lines
 
 
-def get_key_value_strings(string):
+def get_key_value_strings(string: str) -> List[str]:
     if not string:
         return []
     lines = get_lines(string=string)

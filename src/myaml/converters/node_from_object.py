@@ -12,12 +12,12 @@ def node_from_object(obj):
 
 
 @node_from_object.register(str)
-def _(obj):
+def _1(obj) -> 'ScalarNode':
     return ScalarNode(value=obj)
 
 
 @node_from_object.register(dict)
-def _(obj):
+def _2(obj) -> 'MappingNode':
     map_ = {}
     for key, value in obj.items():
         keyNode = node_from_object(key)
@@ -27,7 +27,7 @@ def _(obj):
 
 
 @node_from_object.register(list)
-def _(obj):
+def _3(obj) -> 'SequenceNode':
     items = []
     for element in obj:
         elementNode = node_from_object(element)

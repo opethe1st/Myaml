@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 from dataclasses import dataclass
 
@@ -12,7 +13,7 @@ class Line:
     indent: int
 
 
-def get_lines(string):
+def get_lines(string: str) -> List[Line]:
     lines = []
     lineStrings = string.split("\n")
     for lineString in lineStrings:
@@ -21,13 +22,13 @@ def get_lines(string):
     return lines
 
 
-def line_from_string(string):
+def line_from_string(string: str) -> Line:
     indent = get_indent(string=string)
     value = get_string(string=string)
     return Line(string=value, indent=indent)
 
 
-def get_indent(string):
+def get_indent(string: str) -> int:
     match = re.match(pattern=r'(\s*?)\S', string=string)
     numOfSpaces = len(match.group(1)) if match is not None else 0
     if numOfSpaces%NUM_SPACES_IN_INDENT:
@@ -37,12 +38,12 @@ def get_indent(string):
     return numOfSpaces//NUM_SPACES_IN_INDENT
 
 
-def get_string(string):
+def get_string(string: str) -> str:
     match = re.match(pattern=r'\s*?(\S.*)$', string=string, flags=re.MULTILINE)
     return match.group(1) if match is not None else ''
 
 
-def get_string_from_lines(lines):
+def get_string_from_lines(lines: List[Line]) -> str:
     lineStrings = [
         "{indent}{string}".format(indent=' '*NUM_SPACES_IN_INDENT*line.indent, string=line.string)
         for line in lines

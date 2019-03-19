@@ -1,15 +1,9 @@
 import re
 
+from myaml.core.nodes import MappingNode, Node, ScalarNode, SequenceNode
 from myaml.exceptions import ParsingException
-from myaml.core.nodes import (
-    MappingNode,
-    ScalarNode,
-    SequenceNode
-)
-from .utils import (
-    get_element_strings,
-    get_key_value_strings,
-)
+
+from .utils import get_element_strings, get_key_value_strings
 
 
 def node_from_string(string: str) -> 'Node':
@@ -28,7 +22,7 @@ def scalar_node_from_string(string: str) -> 'ScalarNode':
     return ScalarNode(value=string.strip())
 
 
-def sequence_node_from_string(string) -> 'SequenceNode':
+def sequence_node_from_string(string: str) -> 'SequenceNode':
     items = []
     for elementString in get_element_strings(string=string):
         items.append(
@@ -48,8 +42,11 @@ def mapping_node_from_string(string: str) -> 'MappingNode':
 
 def get_key_node(string: str) -> 'ScalarNode':
     match = re.match(string=string, pattern=r'^\s*(\S(?<!-).*?):\s*')
-    key = match.group(1)
-    return ScalarNode(value=key)
+    if match:
+        key = match.group(1)
+        return ScalarNode(value=key)
+    else:
+        raise Exception(f'Unable to key node in this string "{string}"')
 
 
 def get_value_node(string: str) -> 'Node':
@@ -81,5 +78,5 @@ def is_mapping_string(string: str) -> bool:
     )
 
 
-def is_sequence_string(string):
-    return re.match(pattern=r'^\s*-', string=string)
+def is_sequence_string(string: str) -> bool:
+    return bool(re.match(pattern=r'^\s*-', string=string))
