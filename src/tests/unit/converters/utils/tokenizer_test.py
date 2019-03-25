@@ -14,6 +14,7 @@ from myaml.converters.utils.tokenizer import (
 
 class TestTokenizer(unittest.TestCase):
 
+    # there are possibly too many test cases here. plus I wish I could use a @test decorator instead of name mangling.
     @parameterized.expand([
         ('', []),
         ('''a
@@ -83,6 +84,43 @@ class TestTokenizer(unittest.TestCase):
                 Separator(),
                 Value(data='value'),
             ]
+        ),
+        (' ', []),
+        ('#abc', []),
+        (' #abc', []),
+        ('# abc', []),
+        ('key: #abc', [Value(data='key'), Separator()]),
+        ('key:#abc', [Value(data='key:#abc')]),
+        ('''key:
+  key1: value #abc''',
+            [
+                Value(data='key'),
+                Separator(),
+                Newline(),
+                Indent(),
+                Value(data='key1'),
+                Separator(),
+                Value(data='value'),
+            ]
+        ),
+        (' # abc', []),
+        ('''# abc
+''', []),
+        ('''# abc
+key: value''', [Value(data='key'), Separator(), Value(data='value')]
+        ),
+        (
+            '''key: value # abc''', [Value(data='key'), Separator(), Value(data='value')]
+        ),
+        (
+            '''key: value # abc''', [Value(data='key'), Separator(), Value(data='value')]
+        ),
+        (
+            '''key: value#abc''', [Value(data='key'), Separator(), Value(data='value#abc')]
+        ),
+        (
+            '''#key
+key: value#abc''', [Value(data='key'), Separator(), Value(data='value#abc')]
         ),
     ])
     def test_key_value(self, string, expectedTokens):

@@ -16,7 +16,6 @@ def tokenize(string):
     return allTokens
 
 
-
 # State machine
 class State(ABC):
     @abstractmethod
@@ -24,12 +23,15 @@ class State(ABC):
         pass
 
 
+@dataclass
 class StartState(State):
     def transition(self, inp):
         if inp == ' ':
             return SpaceState(count=1), []
         elif inp == '-':
             return DashState(), []
+        elif inp == '#':
+            return CommentState(tokenSoFar=''), []
         else:
             return CharacterState(tokenSoFar=inp), []
         raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
@@ -45,6 +47,8 @@ class CharacterState(State):
             return EndState(), [Value(data=self.tokenSoFar)]
         elif inp == '\n':
             return StartState(), [Value(data=self.tokenSoFar), Newline()]
+        elif inp == ' ':
+            return SpaceState(count=1, tokenSoFar=self.tokenSoFar), []
         else:
             return CharacterState(tokenSoFar=self.tokenSoFar+inp), []
         raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
@@ -66,12 +70,20 @@ class ColonState(State):
 @dataclass
 class SpaceState(State):
     count: int
+    tokenSoFar: str = ''
     def transition(self, inp):
         if inp == ' ':
             if self.count == 1:  # for now assuming the indent is 2
-                return SpaceState(count=0), [Indent()]
+                return SpaceState(count=0, tokenSoFar=self.tokenSoFar), [Indent()]
             else:
-                return SpaceState(count=self.count+1), []
+                return SpaceState(count=self.count+1, tokenSoFar=self.tokenSoFar), []
+        elif inp == '#':
+            if self.tokenSoFar:
+                return CommentState(), [Value(data=self.tokenSoFar)]
+            else:
+                return CommentState(), []
+        elif inp is None:
+            return EndState(), []
         else:
             if self.count == 0:
                 if inp == '-':
@@ -103,6 +115,16 @@ class SequenceIndentState(State):
             else:
                 raise Exception('inconsistent sequence indentation')
 
+
+
+@dataclass
+class CommentState(State):
+    tokenSoFar: str = ''
+    def transition(self, inp):
+        if (inp == '\n') or (inp is None):
+            return StartState(), []
+        else:
+            return CommentState(), []  # actually could make this self, [] - but using CommentState to be consistent with the others
 
 
 @dataclass
