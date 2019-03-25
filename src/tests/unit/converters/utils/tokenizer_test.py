@@ -122,6 +122,33 @@ key: value''', [Value(data='key'), Separator(), Value(data='value')]
             '''#key
 key: value#abc''', [Value(data='key'), Separator(), Value(data='value#abc')]
         ),
+        (
+            '''
+   key: value#abcd''', [Indent(), Value(data='key'), Separator(), Value(data='value#abcd')]  # test with an indentSize of 3
+        ),
+        (
+            '''
+-  key: value''', [SequenceIndent(), Value(data='key'), Separator(), Value(data='value')]  # test with an indentSize of 3
+        ),
+        ('-  key', [SequenceIndent(), Value(data='key')]),
+        (
+            '''key:
+   key1: value
+   key2: value''', [
+                Value(data='key'),
+                Separator(),
+                Newline(),
+                Indent(),
+                Value(data='key1'),
+                Separator(),
+                Value(data='value'),
+                Newline(),
+                Indent(),
+                Value(data='key2'),
+                Separator(),
+                Value(data='value')
+            ]
+        ),
     ])
     def test_key_value(self, string, expectedTokens):
         self.assertEqual(
@@ -131,7 +158,6 @@ key: value#abc''', [Value(data='key'), Separator(), Value(data='value#abc')]
 
     @parameterized.expand([
         (' key', Exception),
-        ('-  key', Exception)  # because there are two spaces.
     ])
     def test_key_value(self, string, expectedException):
         with self.assertRaises(expected_exception=expectedException):
