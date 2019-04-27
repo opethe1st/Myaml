@@ -5,26 +5,33 @@ from typing import List, Optional, Tuple
 
 from dataclasses import dataclass
 
+from myaml.exceptions import InconsistentIndentation
+
 
 def tokenize(string):
+    string = string.rstrip()+'\n'
     indentSize = get_indent_size(string=string)
     currentState = StartState(context={'indentSize': indentSize})
     allTokens = []
-    characters = list(string)
-    characters.append(None) # None indicates the end of the string
-    for letter in characters:
-        currentState, tokens = currentState.transition(inp=letter)
-        allTokens.extend(tokens)
+    for line in string.splitlines(keepends=True):
+        tokensOnLine = []
+        for letter in line:
+            currentState, tokens = currentState.transition(inp=letter)
+            tokensOnLine.extend(tokens)
+        if tokensOnLine and not all(isinstance(token, (SequenceIndent, Indent)) for token in tokensOnLine):
+            allTokens.extend(tokensOnLine)
     return allTokens
 
 
 def get_indent_size(string: str) -> Optional[int]:
-    match = re.search(pattern=r'\n*^([-|\s]\s+)\S', string=string, flags=re.MULTILINE)
+    match = re.search(pattern=r'\n*^([-|\s]\s+)(?!#)\S', string=string, flags=re.MULTILINE)
     indentSize = None
     if match:
         indentSize = len(match.group(1))
     return indentSize
 
+#  Turns out I could have avoided all of this low-level state machine business if I just used regex.
+# Would it be faster with regex? Experiment with it later.
 
 # State machine
 class State(ABC):
@@ -44,7 +51,7 @@ class StartState(State):
         elif inp == '#':
             return CommentState(context=self.context, tokenSoFar=''), []
         elif inp == '\n':
-            return StartState(context=self.context), [] # trims the trailing newlines.
+            return self, [] # trims the trailing newlines.
         else:
             return CharacterState(context=self.context, tokenSoFar=inp), []
         raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
@@ -57,14 +64,13 @@ class CharacterState(State):
     def transition(self, inp) -> Tuple['State', List['Token']]:
         if inp == ':':
             return ColonState(context=self.context, tokenSoFar=self.tokenSoFar), []
-        elif inp is None:
-            return EndState(), [Value(data=self.tokenSoFar)]
         elif inp == '\n':
             return StartState(context=self.context), [Value(data=self.tokenSoFar), Newline()]
         elif inp == ' ':
             return SpaceState(context=self.context, count=1, tokenSoFar=self.tokenSoFar), []
         else:
-            return CharacterState(context=self.context, tokenSoFar=self.tokenSoFar+inp), []
+            self.tokenSoFar += inp
+            return self, []
         raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
 
 
@@ -75,11 +81,10 @@ class ColonState(State):
     def transition(self, inp):
         if inp == ' ':
             return StartState(context=self.context), [Value(data=self.tokenSoFar), Separator()]
-        if inp == '\n':
+        elif inp == '\n':
             return StartState(context=self.context), [Value(data=self.tokenSoFar), Separator(), Newline()]
         else:
             return CharacterState(context=self.context, tokenSoFar=self.tokenSoFar+':'+inp), []
-        raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
 
 
 @dataclass
@@ -90,17 +95,16 @@ class SpaceState(State):
     def transition(self, inp):
         indentSize = self.context.get('indentSize')
         if inp == ' ':
-            if self.count == (indentSize-1):
-                return SpaceState(context=self.context, count=0, tokenSoFar=self.tokenSoFar), [Indent()]
+            self.count = (self.count+1)%indentSize
+            if self.count == 0:
+                return self, [Indent()]
             else:
-                return SpaceState(context=self.context, count=(self.count+1)%indentSize, tokenSoFar=self.tokenSoFar), []
+                return self, []
         elif inp == '#':
             if self.tokenSoFar:
                 return CommentState(context=self.context), [Value(data=self.tokenSoFar)]
             else:
                 return CommentState(context=self.context), []
-        elif inp is None:
-            return EndState(), []
         else:
             if self.count == 0:
                 if inp == '-':
@@ -108,7 +112,7 @@ class SpaceState(State):
                 else:
                     return CharacterState(context=self.context, tokenSoFar=inp), []
             else:
-                raise Exception('Inconsistent Indentation')
+                raise InconsistentIndentation(f'Inconsistent Indentation')  # should this be Character state? need to modify to support spaces in dictionary values
 
 
 @dataclass
@@ -127,13 +131,16 @@ class SequenceIndentState(State):
     count: int
     def transition(self, inp):
         if inp == ' ':
-            return SequenceIndentState(context=self.context, count=self.count+1), []
+            self.count = self.count + 1
+            return self, []
         else:
             if self.count == self.context.get('indentSize'):
-                return CharacterState(context=self.context, tokenSoFar=inp), [SequenceIndent()]
+                if inp == '-':
+                    return DashState(context=self.context), [SequenceIndent()]
+                else:
+                    return CharacterState(context=self.context, tokenSoFar=inp), [SequenceIndent()]
             else:
                 raise Exception('inconsistent sequence indentation')
-
 
 
 @dataclass
@@ -141,16 +148,10 @@ class CommentState(State):
     context: dict
     tokenSoFar: str = ''
     def transition(self, inp):
-        if (inp == '\n') or (inp is None):
+        if inp == '\n':
             return StartState(context=self.context), []
         else:
-            return CommentState(context=self.context), []  # actually could make this self, [] - but using CommentState to be consistent with the others
-
-
-@dataclass
-class EndState(State):
-    def transition(self, inp):
-        pass
+            return self, []
 
 
 # Token types

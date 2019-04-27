@@ -57,3 +57,6 @@ Dependency should be one-way... but how does this apply to the observer pattern?
 Refactoring now - this is a better design, I think, so far!
 
 Refactoring is such a joy when you have integration tests
+
+
+Need to support spaces in strings

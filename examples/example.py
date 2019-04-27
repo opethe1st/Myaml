@@ -1,14 +1,13 @@
-import myaml
 from pprint import pprint
 
+import yaml
+
+import myaml
 
 with open('demo.yaml') as file:
-    d1 = myaml.load(string=file.read())
+    string = file.read()
+    d1 = myaml.load(string=string)
+    d2 = yaml.load(stream=string, Loader=yaml.SafeLoader)
 
-with open('demo2.yaml') as file:
-    d2 = myaml.load(string=file.read())
-
-
-pprint(d1)
-pprint(d2)
+# demonstrate that yaml and myaml give the same result! :)
 print(d1 == d2)

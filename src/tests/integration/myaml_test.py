@@ -12,40 +12,33 @@ class TestLoad(unittest.TestCase):
         ('''key:
     blah: value''', {'key': {'blah': 'value'}}
         ),
-        ('''-   -   blah''', [['blah']]
-        ),
+        ('''-   -   blah''', [['blah']]),
         ('''
 key:
-key2:
-    ''', {'key': '', 'key2': ''}
+key2:''', {'key': None, 'key2': None}
+        ),
+        ('''
+key: value''', {'key': 'value'}
         ),
         ('''
 key: value
-    ''', {'key': 'value'}
+key2: value2''', {'key': 'value', 'key2': 'value2'}
         ),
         ('''
 key: value
-key2: value2
-    ''', {'key': 'value', 'key2': 'value2'}
-        ),
-        ('''
-key: value
-key2: value2
-    ''', {'key': 'value', 'key2': 'value2'}
+key2: value2''', {'key': 'value', 'key2': 'value2'}
         ),
         ('''
 key: value
 key2:
     key3: value
-key4: value
-    ''', {'key': 'value', 'key2': {'key3': 'value'}, 'key4': 'value'}
+key4: value''', {'key': 'value', 'key2': {'key3': 'value'}, 'key4': 'value'}
         ),
         ('''
 - key: value
 - key2:
     key3: value
-- value
-    ''', [
+- value''', [
             {'key': 'value'},
             {'key2': {'key3': 'value'}},
             'value',
@@ -53,11 +46,8 @@ key4: value
         ),
         ('''
 key:
-  key: value''', {'key': {'key': 'value'}}
-        ),
-        ('''
-key:
-  key: value''', {'key': {'key': 'value'}}
+  key: value
+   ''', {'key': {'key': 'value'}}
         ),
         ('''
 # blah blah blah
@@ -77,10 +67,11 @@ key:
 value-1232''', 'value-1232'
         ),
         ('''
-value:1232''', 'value:1232'
+value:1232
+ ''', 'value:1232'
         ),
     ])
-    def test_parsing(self, string, expected):
+    def test_loading(self, string, expected):
         self.assertEqual(myaml.load(string=string), expected)
 
     @parameterized.expand([
@@ -88,6 +79,18 @@ value:1232''', 'value:1232'
 key:
   key: value
    key: value''', myaml.exceptions.InconsistentIndentation
+        ),
+        ('''
+    key: value
+    key: value
+key:
+''', myaml.exceptions.ParsingException
+        ),
+        ('''
+- key: value
+- key: value
+key:
+''', myaml.exceptions.ParsingException
         ),
     ])
     def test_raise_exception(self, string, expectedException):
