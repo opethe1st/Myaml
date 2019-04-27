@@ -14,6 +14,6 @@ def load(string):
     return object_from_node(node)
 
 
-def dump(obj):
+def dump(obj, indentSize=4):
     node = node_from_object(obj)
-    return string_from_node(node)
+    return string_from_node(node, indentSize=indentSize)

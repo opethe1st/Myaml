@@ -21,6 +21,17 @@ key2:''', {'key': None, 'key2': None}
 key: value''', {'key': 'value'}
         ),
         ('''
+this is a key: this is a value''', {'this is a key': 'this is a value'}
+        ),
+        ('''
+this is a key:
+    this is another key: this is a value
+        ''', {
+            'this is a key':
+            {'this is another key': 'this is a value'}
+            }
+        ),
+        ('''
 key: value
 key2: value2''', {'key': 'value', 'key2': 'value2'}
         ),

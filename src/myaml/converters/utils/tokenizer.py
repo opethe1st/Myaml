@@ -67,7 +67,7 @@ class CharacterState(State):
         elif inp == '\n':
             return StartState(context=self.context), [Value(data=self.tokenSoFar), Newline()]
         elif inp == ' ':
-            return SpaceState(context=self.context, count=1, tokenSoFar=self.tokenSoFar), []
+            return SpaceInCharacterState(context=self.context, tokenSoFar=self.tokenSoFar), []
         else:
             self.tokenSoFar += inp
             return self, []
@@ -88,10 +88,20 @@ class ColonState(State):
 
 
 @dataclass
+class SpaceInCharacterState(State):
+    context: dict
+    tokenSoFar: str
+    def transition(self, inp):
+        if inp == '#':
+            return CommentState(context=self.context), [Value(data=self.tokenSoFar)]
+        else:
+            return CharacterState(context=self.context, tokenSoFar=self.tokenSoFar+' '+inp), []
+
+
+@dataclass
 class SpaceState(State):
     context: dict
     count: int
-    tokenSoFar: str = ''
     def transition(self, inp):
         indentSize = self.context.get('indentSize')
         if inp == ' ':
@@ -101,10 +111,7 @@ class SpaceState(State):
             else:
                 return self, []
         elif inp == '#':
-            if self.tokenSoFar:
-                return CommentState(context=self.context), [Value(data=self.tokenSoFar)]
-            else:
-                return CommentState(context=self.context), []
+            return CommentState(context=self.context), []
         else:
             if self.count == 0:
                 if inp == '-':
@@ -112,7 +119,7 @@ class SpaceState(State):
                 else:
                     return CharacterState(context=self.context, tokenSoFar=inp), []
             else:
-                raise InconsistentIndentation(f'Inconsistent Indentation')  # should this be Character state? need to modify to support spaces in dictionary values
+                raise InconsistentIndentation(f'Inconsistent Indentation')
 
 
 @dataclass

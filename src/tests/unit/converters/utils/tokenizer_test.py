@@ -89,7 +89,7 @@ class TestTokenizer(unittest.TestCase):
                 Newline(),
             ]
         ),
-        # (' ', []), # WOW, this fails
+        (' ', []),
         ('#abc', []),
         (' #abc', []),
         ('# abc', []),
