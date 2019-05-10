@@ -5,17 +5,20 @@ from typing import List, Optional, Tuple
 
 from dataclasses import dataclass
 
-from myaml.exceptions import InconsistentIndentation
+from myaml.exceptions import TokenizationException
 
 
 def tokenize(string):
     string = string.rstrip()+'\n'
     indentSize = get_indent_size(string=string)
-    currentState = StartState(context={'indentSize': indentSize})
+    context = {'indentSize': indentSize}
+    currentState = StartState(context=context)
     allTokens = []
-    for line in string.splitlines(keepends=True):
+    for line_number, line in enumerate(string.splitlines(keepends=True), start=1):
+        context['line_number'] = line_number
         tokensOnLine = []
-        for letter in line:
+        for column_number, letter in enumerate(line, start=1):
+            context['column_number'] = column_number
             currentState, tokens = currentState.transition(inp=letter)
             tokensOnLine.extend(tokens)
         if tokensOnLine and not all(isinstance(token, (SequenceIndent, Indent)) for token in tokensOnLine):
@@ -54,7 +57,6 @@ class StartState(State):
             return self, [] # trims the trailing newlines.
         else:
             return CharacterState(context=self.context, tokenSoFar=inp), []
-        raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
 
 
 @dataclass
@@ -71,7 +73,6 @@ class CharacterState(State):
         else:
             self.tokenSoFar += inp
             return self, []
-        raise Exception(f'this transisiton is not supported yet. inp: "{inp}"')
 
 
 @dataclass
@@ -119,7 +120,7 @@ class SpaceState(State):
                 else:
                     return CharacterState(context=self.context, tokenSoFar=inp), []
             else:
-                raise InconsistentIndentation(f'Inconsistent Indentation')
+                raise TokenizationException(msg=f'Inconsistent Indentation', context=self.context)
 
 
 @dataclass
@@ -147,7 +148,7 @@ class SequenceIndentState(State):
                 else:
                     return CharacterState(context=self.context, tokenSoFar=inp), [SequenceIndent()]
             else:
-                raise Exception('inconsistent sequence indentation')
+                raise TokenizationException(msg='inconsistent sequence indentation', context=self.context)
 
 
 @dataclass
