@@ -6,7 +6,7 @@ from setuptools import (
 setup(
     name='myaml',
     version='0.0.1',
-    description="Minimal yaml",
+    description="My yaml library",
     url='http://github.com/opethe1st/myaml',
     author='Opemipo Ogunkola (Ope)',
     author_email='ogunks900@gmail.com',

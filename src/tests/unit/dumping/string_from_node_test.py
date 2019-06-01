@@ -1,20 +1,16 @@
 import unittest
 from functools import singledispatch
 
-from myaml.core import (
-    MappingNode,
-    ScalarNode,
-)
-from myaml.converters.string_from_node import string_from_node
-
+from myaml.core import MappingNode, ScalarNode
+from myaml.dumping.string_from_node import string_from_node
 
 
 class TestStringFromNode(unittest.TestCase):
 
     def test_to_object(self):
         node = MappingNode(
-            map_={
-                ScalarNode(value='key'): ScalarNode(value='value')
+            mapping={
+                ScalarNode(data='key'): ScalarNode(data='value')
             }
         )
         expectedString = 'key: value\n'
@@ -25,14 +21,14 @@ class TestStringFromNode(unittest.TestCase):
 
     def test_to_object_complex(self):
         node = MappingNode(
-            map_={
-                ScalarNode(value='key1'): ScalarNode(value='value'),
-                ScalarNode(value='key'): MappingNode(
-                    map_={
-                        ScalarNode(value='key1'): ScalarNode(value='value'),
-                        ScalarNode(value='key'): MappingNode(
-                            map_={
-                                ScalarNode(value='key'): ScalarNode(value='value')
+            mapping={
+                ScalarNode(data='key1'): ScalarNode(data='value'),
+                ScalarNode(data='key'): MappingNode(
+                    mapping={
+                        ScalarNode(data='key1'): ScalarNode(data='value'),
+                        ScalarNode(data='key'): MappingNode(
+                            mapping={
+                                ScalarNode(data='key'): ScalarNode(data='value')
                             }
                         )
                     }
@@ -52,14 +48,14 @@ key:
 
     def test_to_object_complex_specify_indent_size(self):
         node = MappingNode(
-            map_={
-                ScalarNode(value='key1'): ScalarNode(value='value'),
-                ScalarNode(value='key'): MappingNode(
-                    map_={
-                        ScalarNode(value='key1'): ScalarNode(value='value'),
-                        ScalarNode(value='key'): MappingNode(
-                            map_={
-                                ScalarNode(value='key'): ScalarNode(value='value')
+            mapping={
+                ScalarNode(data='key1'): ScalarNode(data='value'),
+                ScalarNode(data='key'): MappingNode(
+                    mapping={
+                        ScalarNode(data='key1'): ScalarNode(data='value'),
+                        ScalarNode(data='key'): MappingNode(
+                            mapping={
+                                ScalarNode(data='key'): ScalarNode(data='value')
                             }
                         )
                     }

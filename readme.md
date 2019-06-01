@@ -2,6 +2,11 @@
 This is a code kata that implements a subset of the yaml spec.
 It is NOT intended to be used by anyone. It's just a way for me to deliberately practice my software engineering skills (design in particular)
 
+You can demo the code here
+
+
+[![Edit on repl.it](https://repl-badge.jajoosam.repl.co/edit.png)](https://repl.it/github/https://github.com/opethe1st/myaml?lang=python&ref=button)
+
 
 ### How to use this library
 -----

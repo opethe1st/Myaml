@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            -   image: circleci/<language>:<versionTAG> # TODO(ope) new to support spaces in scalar strings
+            -   image: circleci/< language >:<versionTAG> # TODO(ope) new to support spaces in scalar strings
         steps:
             -   checkout
             -   run: <command>

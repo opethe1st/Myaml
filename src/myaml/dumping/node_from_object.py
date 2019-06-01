@@ -1,6 +1,6 @@
 from functools import singledispatch
 
-from myaml.core.nodes import (
+from myaml.core import (
     MappingNode,
     ScalarNode,
     SequenceNode,
@@ -13,17 +13,17 @@ def node_from_object(obj):
 
 @node_from_object.register(str)
 def _1(obj) -> 'ScalarNode':
-    return ScalarNode(value=obj)
+    return ScalarNode(data=obj)
 
 
 @node_from_object.register(dict)
 def _2(obj) -> 'MappingNode':
-    map_ = {}
+    mapping = {}
     for key, value in obj.items():
         keyNode = node_from_object(key)
         valueNode = node_from_object(value)
-        map_[keyNode] = valueNode
-    return MappingNode(map_=map_)
+        mapping[keyNode] = valueNode
+    return MappingNode(mapping=mapping)
 
 
 @node_from_object.register(list)

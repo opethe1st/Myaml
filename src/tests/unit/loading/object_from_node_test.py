@@ -1,18 +1,18 @@
 from unittest import TestCase
 
-from myaml.core.nodes import (
+from myaml.core import (
     MappingNode,
     ScalarNode,
     SequenceNode,
 )
-from myaml.converters.object_from_node import object_from_node
+from myaml.loading.object_from_node import object_from_node
 
 
 class TestObjectFromScalarNode(TestCase):
 
     def test_to_object(self):
         value = 'value string'
-        node = ScalarNode(value=value)
+        node = ScalarNode(data=value)
         expectedObject = value
         self.assertEqual(
             object_from_node(node),  # sigh. I can't use keyword arguments with singledispatch functions
@@ -23,7 +23,7 @@ class TestObjectFromScalarNode(TestCase):
 class TestObjectFromSequenceNode(TestCase):
 
     def test_to_object(self):
-        items = [ScalarNode(value='value')]
+        items = [ScalarNode(data='value')]
         node = SequenceNode(items=items)
         expectedObject = ['value']
         self.assertEqual(
@@ -35,8 +35,8 @@ class TestObjectFromSequenceNode(TestCase):
 class TestObjectFromMappingNode(TestCase):
 
     def test_to_object(self):
-        map_ = {ScalarNode(value='key'): ScalarNode(value='value')}
-        node = MappingNode(map_=map_)
+        mapping = {ScalarNode(data='key'): ScalarNode(data='value')}
+        node = MappingNode(mapping=mapping)
         expectedObject = {'key': 'value'}
         self.assertEqual(
             object_from_node(node),

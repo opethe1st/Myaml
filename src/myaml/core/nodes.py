@@ -9,12 +9,12 @@ class Node:
 
 @dataclass(unsafe_hash=True)
 class ScalarNode(Node):
-    value: str # this is a string to start with
+    data: str # this is a string to start with
 
 
 @dataclass
 class MappingNode(Node):
-    map_: typing.Dict['ScalarNode', 'Node']
+    mapping: typing.Dict['ScalarNode', 'Node']
 
 
 @dataclass

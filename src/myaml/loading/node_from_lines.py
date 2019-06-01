@@ -1,9 +1,10 @@
 from typing import List
 
-from myaml.converters.utils.line import Line
-from myaml.converters.utils.tokenizer import Indent, Separator, Value
-from myaml.core.nodes import MappingNode, Node, ScalarNode, SequenceNode
+from myaml.core import MappingNode, Node, ScalarNode, SequenceNode
 from myaml.exceptions import ParsingException
+
+from .line import Line
+from .tokenizer import Indent, Separator, Value
 
 
 def node_from_lines(lines: List['Line']):
@@ -19,15 +20,15 @@ def node_from_lines(lines: List['Line']):
 
 
 def scalar_node_from_lines(lines):
-    return ScalarNode(value=lines[0].tokens[0].data)
+    return ScalarNode(data=lines[0].tokens[0].data)
 
 
 def mapping_node_from_lines(lines):
-    map_ = {}
+    mapping = {}
     for itemLines in get_item_lines(lines=lines):
         keyNode, valueNode = get_key_value_node(lines=itemLines)
-        map_[keyNode] = valueNode
-    return MappingNode(map_=map_)
+        mapping[keyNode] = valueNode
+    return MappingNode(mapping=mapping)
 
 
 # TODO(ope): return a list of bounds
@@ -56,12 +57,12 @@ def get_key_value_node(lines):
         raise Exception(f'these lines are not a mapping {lines}')
     if len(lines) == 1:
         line = lines[0]
-        keyNode = ScalarNode(value=line.tokens[0].data)
+        keyNode = ScalarNode(data=line.tokens[0].data)
         data = line.tokens[2].data if len(line.tokens) > 2 else None
-        valueNode = ScalarNode(value=data)
+        valueNode = ScalarNode(data=data)
         return keyNode, valueNode
     else:
-        keyNode = ScalarNode(value=lines[0].tokens[0].data)
+        keyNode = ScalarNode(data=lines[0].tokens[0].data)
         valueNode = node_from_lines(lines=lines[1:])
         return keyNode, valueNode
 

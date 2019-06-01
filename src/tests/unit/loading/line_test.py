@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from myaml.converters.utils.line import Line, lines_from_tokens
-from myaml.converters.utils.tokenizer import (
+from myaml.loading.line import Line, lines_from_tokens
+from myaml.loading.tokenizer import (
     Indent,
     Newline,
     Separator,

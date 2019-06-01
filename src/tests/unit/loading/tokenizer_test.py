@@ -2,13 +2,13 @@ import unittest
 
 from parameterized import parameterized
 
-from myaml.converters.utils import tokenize
-from myaml.converters.utils.tokenizer import (
+from myaml.loading.tokenizer import (
     Indent,
     Newline,
     Separator,
     SequenceIndent,
-    Value
+    Value,
+    tokenize
 )
 
 

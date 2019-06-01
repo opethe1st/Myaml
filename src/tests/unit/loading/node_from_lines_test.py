@@ -1,14 +1,14 @@
 import unittest
 
-from myaml.converters.node_from_lines import node_from_lines
-from myaml.converters.utils.line import Line
-from myaml.converters.utils.tokenizer import (
+from myaml.loading.node_from_lines import node_from_lines
+from myaml.loading.line import Line
+from myaml.loading.tokenizer import (
     Indent,
     Separator,
     SequenceIndent,
     Value
 )
-from myaml.core.nodes import MappingNode, Node, ScalarNode, SequenceNode
+from myaml.core import MappingNode, Node, ScalarNode, SequenceNode
 
 
 class TestNodeFromLines(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestNodeFromLines(unittest.TestCase):
         node = node_from_lines(lines=[Line(indent=0, tokens=[Value(data='key'), Separator(), Value(data='value')])])
         self.assertEqual(
             node,
-            MappingNode(map_={ScalarNode(value='key'): ScalarNode(value='value')})
+            MappingNode(mapping={ScalarNode(data='key'): ScalarNode(data='value')})
         )
 
     def test_mapping_node_2(self):
@@ -51,9 +51,9 @@ class TestNodeFromLines(unittest.TestCase):
         self.assertEqual(
             node,
             MappingNode(
-                map_={
-                    ScalarNode(value='key'): ScalarNode(value='value'),
-                    ScalarNode(value='key1'): MappingNode(map_={ScalarNode(value='key2'): ScalarNode(value='value')}),
+                mapping={
+                    ScalarNode(data='key'): ScalarNode(data='value'),
+                    ScalarNode(data='key1'): MappingNode(mapping={ScalarNode(data='key2'): ScalarNode(data='value')}),
                 }
             )
         )
@@ -66,7 +66,7 @@ class TestNodeFromLines(unittest.TestCase):
         )
         self.assertEqual(
             node,
-            SequenceNode(items=[ScalarNode(value='value')])
+            SequenceNode(items=[ScalarNode(data='value')])
         )
 
     def test_sequence_node_2(self):
@@ -78,7 +78,7 @@ class TestNodeFromLines(unittest.TestCase):
         )
         self.assertEqual(
             node,
-            SequenceNode(items=[ScalarNode(value='value'), ScalarNode(value='value')])
+            SequenceNode(items=[ScalarNode(data='value'), ScalarNode(data='value')])
         )
 
     def test_scalar_node(self):
@@ -89,5 +89,5 @@ class TestNodeFromLines(unittest.TestCase):
         )
         self.assertEqual(
             node,
-            ScalarNode(value='value')
+            ScalarNode(data='value')
         )
